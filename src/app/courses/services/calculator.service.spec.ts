@@ -28,20 +28,15 @@ describe('CalculatorService', () => {
    const result = calculator.add(2,2)
 
    expect(result).toBe(4) //test assertion
-
    expect(loggerSpy.log).toHaveBeenCalledTimes(1);
-
-
   })
 
   it('should subtract two numbers', () => {
     console.log('subtracting numbers')
 
-
     const result = calculator.subtract(2,2)
 
     expect(result).toBe(0, "Unexpected subtraction result") //test assertion
-
     expect(loggerSpy.log).toHaveBeenCalledTimes(1);
   })
 })
