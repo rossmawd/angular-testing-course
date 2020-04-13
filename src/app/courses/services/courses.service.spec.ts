@@ -1,7 +1,7 @@
 import { CoursesService } from './courses.service';
 import { TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing'
-import { COURSES } from '../../../../server/db-data';
+import { COURSES, findLessonsForCourse } from '../../../../server/db-data';
 import { Course } from '../model/course';
 import { HttpErrorResponse } from '@angular/common/http';
 
@@ -75,19 +75,50 @@ describe('CoursesService', () => {
       .subscribe(() => fail("the saveCourse operation should have failed"),
 
         (error: HttpErrorResponse) => {
-        expect(error.status).toBe(500)
-  }
-  )
+          expect(error.status).toBe(500)
+        }
+      )
 
-  const req = httpTestingController.expectOne('/api/courses/12')
-  expect(req.request.method).toEqual('PUT')
+    const req = httpTestingController.expectOne('/api/courses/12')
+    expect(req.request.method).toEqual('PUT')
 
-  req.flush('Save course failed', {status: 500,
-  statusText: 'Internal Server Error'})
-})
+    req.flush('Save course failed', {
+      status: 500,
+      statusText: 'Internal Server Error'
+    })
+  })
 
-afterEach(() => {
-  httpTestingController.verify()
-})
+  it('should find a list of lessons', () => {
+    coursesService.findLessons(12)
+      .subscribe(lessons => {
+        expect(lessons).toBeTruthy();
+        expect(lessons.length).toBe(3);
+      })
+      //our actual url will have params after the path e.g
+      // /api/lessons?courseId=12&pageNumber=0
+      // so instead he passes into expectOne() a function that returns T/F
+    const req = httpTestingController.expectOne(req => {
+      console.log('the url with params for this get lessions req is', req.urlWithParams)
+      return req.url == '/api/lessons'
+    }
+      )
+
+    expect(req.request.method).toEqual('GET');
+
+    //checking all the parameters are getting sent to the server
+    expect(req.request.params.get('courseId')).toEqual('12');
+    expect(req.request.params.get('filter')).toEqual('');
+    expect(req.request.params.get('sortOrder')).toEqual('asc');
+    expect(req.request.params.get('pageNumber')).toEqual('0');
+    expect(req.request.params.get('pageSize')).toEqual('3');
+
+    req.flush({
+      payload: findLessonsForCourse(12).slice(0,3)
+    })
+  })
+
+  afterEach(() => {
+    httpTestingController.verify()
+  })
 }
 )
