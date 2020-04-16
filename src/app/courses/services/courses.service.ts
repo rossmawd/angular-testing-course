@@ -25,6 +25,8 @@ export class CoursesService {
         return this.http.put<Course>(`/api/courses/${courseId}`, changes);
     }
 
+  
+
     findLessons(
         courseId:number, filter = '', sortOrder = 'asc',
         pageNumber = 0, pageSize = 3):  Observable<Lesson[]> {
