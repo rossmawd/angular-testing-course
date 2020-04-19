@@ -64,7 +64,7 @@ describe('HomeComponent', () => {
 
     fixture.detectChanges() //apply data changes to the template
 
-    const tabs = el.queryAll(By.css('mat-tab-label'))
+    const tabs = el.queryAll(By.css(".mat-tab-label"))
 
     expect(tabs.length).toBe(1, 'unexptected number of tabs found')
   });
@@ -78,7 +78,7 @@ describe('HomeComponent', () => {
 
     fixture.detectChanges() //apply data changes to the template
 
-    const tabs = el.queryAll(By.css('mat-tab-label'))
+    const tabs = el.queryAll(By.css('.mat-tab-label'))
 
     expect(tabs.length).toBe(1, 'unexptected number of tabs found')
 
@@ -93,7 +93,7 @@ describe('HomeComponent', () => {
 
     fixture.detectChanges() //apply data changes to the template
 
-    const tabs = el.queryAll(By.css('mat-tab-label'))
+    const tabs = el.queryAll(By.css('.mat-tab-label'))
 
     expect(tabs.length).toBe(2, 'Expected to find 2 tabs')
 
