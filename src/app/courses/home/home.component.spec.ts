@@ -14,8 +14,6 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { click } from '../common/test-utils';
 
 
-
-
 describe('HomeComponent', () => {
 
   let fixture: ComponentFixture<HomeComponent>;
@@ -24,9 +22,9 @@ describe('HomeComponent', () => {
   let coursesService: any;
 
   const beginnerCourses = setupCourses()
-  .filter(course => course.category == 'BEGINNER')
+    .filter(course => course.category == 'BEGINNER')
   const advancedCourses = setupCourses()
-  .filter(course => course.category == 'ADVANCED')
+    .filter(course => course.category == 'ADVANCED')
 
   beforeEach(async(() => {
     const coursesServiceSpy = jasmine.createSpyObj('CoursesService', ['findAllCourses'])
@@ -37,7 +35,7 @@ describe('HomeComponent', () => {
         NoopAnimationsModule
       ],
       providers: [ //terminology traffic jam (22)
-        { provide: CoursesService, useValue: coursesServiceSpy }
+        { provide: CoursesService, useValue: coursesServiceSpy },
       ]
     }).compileComponents().then(() => {
       fixture = TestBed.createComponent(HomeComponent)
@@ -46,8 +44,11 @@ describe('HomeComponent', () => {
       coursesService = TestBed.get(CoursesService)
     }
     )
+    // <input id="myInput" type="text" [(ngModel)]="myInputValue" (blur)="someMethod()">
 
   }));
+
+
 
   it("should create the component", () => {
 
@@ -55,7 +56,7 @@ describe('HomeComponent', () => {
 
   });
 
-//onInit the home component calls reloadCourses, which calls on coursesService
+  //onInit the home component calls reloadCourses, which calls on coursesService
   it("should display only beginner courses", () => {
 
     //of() - returns an obserbale that immediately emits the value
@@ -72,7 +73,7 @@ describe('HomeComponent', () => {
 
   it("should display only advanced courses", () => {
 
-      //of() - returns an obserbale that immediately emits the value
+    //of() - returns an obserbale that immediately emits the value
     //does this INTERCEPT the call of findAllCourses?
     coursesService.findAllCourses.and.returnValue(of(advancedCourses))
 
@@ -87,7 +88,7 @@ describe('HomeComponent', () => {
 
   it("should display both tabs", () => {
 
-         //of() - returns an obserbale that immediately emits the value
+    //of() - returns an obserbale that immediately emits the value
     //does this INTERCEPT the call of findAllCourses?
     coursesService.findAllCourses.and.returnValue(of(setupCourses()))
 
@@ -100,12 +101,26 @@ describe('HomeComponent', () => {
   });
 
 
-  it("should display advanced courses when tab clicked", () => {
+  it("should display advanced courses when tab clicked", (done: DoneFn) => {
+    coursesService.findAllCourses.and.returnValue(of(setupCourses()))
 
-    pending();
+    fixture.detectChanges() //apply changes to template
+    const tabs = el.queryAll(By.css('.mat-tab-label'))
+    console.log('we are clicking ', tabs[1])
+    click(tabs[1]) // simulated CLICK
 
+    fixture.detectChanges()
+
+    setTimeout(() => {
+      const cardTitles = el.queryAll(By.css('.mat-tab-body-active .mat-card-title'));
+
+      expect(cardTitles.length).toBeGreaterThan(0, 'could not find card titles')
+
+      expect(cardTitles[0].nativeElement.textContent).toContain('Angular Security Course')
+
+      done()
+    }, 500);
   });
-
 });
 
 
