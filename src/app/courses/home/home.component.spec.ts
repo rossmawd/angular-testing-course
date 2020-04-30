@@ -120,6 +120,8 @@ describe('HomeComponent', () => {
 
   }))
 
+  //testing travis build
+
   it("should display advanced courses when tab clicked- async", async(() => {
     coursesService.findAllCourses.and.returnValue(of(setupCourses()))
 
